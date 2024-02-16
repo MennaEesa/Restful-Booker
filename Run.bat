@@ -1,0 +1,1 @@
+newman run RestFul.postman_collection.json -e Test.postman_environment.json --reporters=cli,htmlextra

@@ -1,0 +1,1182 @@
+{
+	"info": {
+		"_postman_id": "9aa9e092-97b9-4f90-b1cd-6929f2056c83",
+		"name": "RestFul",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31849019",
+		"_collection_link": "https://www.postman.com/gold-meteor-138955/workspace/restful-booker/collection/31849019-9aa9e092-97b9-4f90-b1cd-6929f2056c83?action=share&source=collection_link&creator=31849019"
+	},
+	"item": [
+		{
+			"name": "1.Authorization",
+			"item": [
+				{
+					"name": "1.1createToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Check token not less than  10 digits\r",
+									"pm.test(\"[1.Authorization].[1.1createToken].[1]Check Token not less than 10 digits\",function(){\r",
+									"pm.expect(JSON.parse(responseBody).token.length).not.lessThan(10)\r",
+									"console.log(JSON.parse(responseBody).token)\r",
+									"});\r",
+									"\r",
+									"// Check Token is exist in response Body\r",
+									"pm.test('[2.Booking].[2.2createBooking].[30]Check Token is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('token');\r",
+									"})\r",
+									"\r",
+									"// Check Token not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.2createBooking].[32]Check token not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).token).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).token).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check token is String\r",
+									"pm.test(\"[2.Booking].[2.2createBooking].[32]Check token is String\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).token).to.be.equal(\"string\")\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"Token\",JSON.parse(responseBody).token);\r",
+									"\r",
+									"pm.test(\"[1.Authorization].[1.1createToken].[2]Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2.Booking",
+			"item": [
+				{
+					"name": "2.1createBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check status code is 200",
+									"pm.test('[2.Booking].[2.2createBooking].[1]Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"})",
+									"",
+									"//// Check Booking id property",
+									"",
+									"// Check booking id is Exist in Respone body",
+									"pm.test('[2.Booking].[2.2createBooking].[2]Check Booking ID is Exisits in Response Body', function () {",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('bookingid');",
+									"})",
+									"// Check Booking id not null or undefinede ",
+									"pm.test('[2.Booking].[2.2createBooking].[3]Check booking id not null or undefined', function () {",
+									"    pm.expect(JSON.parse(responseBody).bookingid).to.not.be.equal(null);",
+									"    pm.expect(JSON.parse(responseBody).bookingid).to.not.be.equal(undefined);",
+									"})",
+									"// Check Booking ID is Integer",
+									"pm.test('[2.Booking].[2.2createBooking].[4]Check booking id is integer', function () {",
+									"    console.log(typeof JSON.parse(responseBody).bookingid);",
+									"    pm.expect(typeof JSON.parse(responseBody).bookingid).to.be.equal('number');",
+									"})",
+									"",
+									"// Set Booking ID in collection variable and send new Get request",
+									"pm.test('[2.Booking].[2.2createBooking].[5]send request to get booking id ', function () {",
+									"    const responseBody = pm.response.json().bookingid;",
+									"    pm.collectionVariables.set('bookingid', responseBody);",
+									"    pm.sendRequest({",
+									"        url: 'https://restful-booker.herokuapp.com/booking/' + pm.collectionVariables.get('bookingid'),",
+									"        method: 'GET'",
+									"    });",
+									"    console.log(responseBody);",
+									"})",
+									"",
+									"",
+									"//// Check First name property",
+									"",
+									"// Check First name is exist in response Body",
+									"pm.test('[2.Booking].[2.2createBooking].[6]Check firstname is Exisits in Response Body', function () {",
+									"    pm.expect(JSON.parse(responseBody).booking).to.have.property('firstname');",
+									"})",
+									"",
+									"// Check First name as expected",
+									"pm.test('[2.Booking].[2.2createBooking].[7]Check firstname is : '+JSON.parse(request.data).firstname, function () {",
+									"    pm.expect(JSON.parse(request.data).firstname).to.be.equal(JSON.parse(responseBody).booking.firstname);",
+									"})",
+									"// Check First name not null or undefinede",
+									"pm.test(\"[2.Booking].[2.2createBooking].[8]Check First name not null or undefined\",function(){",
+									"  pm.expect(JSON.parse(responseBody).booking.firstname).to.not.be.equal(undefined);",
+									"  pm.expect(JSON.parse(responseBody).booking.firstname).to.not.be.equal(null);",
+									"});",
+									"",
+									"// Check First name is String",
+									"pm.test(\"[2.Booking].[2.2createBooking].[9]Check first name is String\",function(){",
+									"    pm.expect(typeof JSON.parse(responseBody).booking.firstname).to.be.equal(\"string\")",
+									"})",
+									"",
+									"",
+									"",
+									"//// Check lastname property",
+									"",
+									"// Check lastname is exist in response Body",
+									"pm.test('[2.Booking].[2.2createBooking].[10]Check lastname is Exisits in Response Body', function () {",
+									"    pm.expect(JSON.parse(responseBody).booking).to.have.property('lastname');",
+									"})",
+									"",
+									"// Check lastname as expected",
+									"pm.test('[2.Booking].[2.2createBooking].[11]Check lastname is : '+JSON.parse(request.data).lastname, function () {",
+									"    pm.expect(JSON.parse(request.data).lastname).to.be.equal(JSON.parse(responseBody).booking.lastname);",
+									"})",
+									"// Check lastname not null or undefinede",
+									"pm.test(\"[2.Booking].[2.2createBooking].[12]Check lastname not null or undefined\",function(){",
+									"  pm.expect(JSON.parse(responseBody).booking.lastname).to.not.be.equal(undefined);",
+									"  pm.expect(JSON.parse(responseBody).booking.lastname).to.not.be.equal(null);",
+									"});",
+									"",
+									"// Check lastname is String",
+									"pm.test(\"[2.Booking].[2.2createBooking].[13]Check lastname is String\",function(){",
+									"    pm.expect(typeof JSON.parse(responseBody).booking.lastname).to.be.equal(\"string\")",
+									"})",
+									"",
+									"",
+									"",
+									"//// check totalprice property",
+									"",
+									"// Check total price is exists in response body ",
+									"pm.test('[2.Booking].[2.2createBooking].[14]Check totalprice is Exisits in Response Body', function () {",
+									"    pm.expect(JSON.parse(responseBody).booking).to.have.property('totalprice');",
+									"})",
+									"",
+									"// Check totalprice as expected",
+									"pm.test('[2.Booking].[2.2createBooking].[15]Check totalprice is : '+JSON.parse(request.data).totalprice, function () {",
+									"    pm.expect(JSON.parse(request.data).totalprice).to.be.equal(JSON.parse(responseBody).booking.totalprice);",
+									"})",
+									"// Check totalprice not null or undefinede",
+									"pm.test(\"[2.Booking].[2.2createBooking].[16]Check totalprice not null or undefined\",function(){",
+									"  pm.expect(JSON.parse(responseBody).booking.totalprice).to.not.be.equal(undefined);",
+									"  pm.expect(JSON.parse(responseBody).booking.totalprice).to.not.be.equal(null);",
+									"});",
+									"",
+									"// Check totalprice is number",
+									"pm.test(\"[2.Booking].[2.2createBooking].[17]Check totalprice is number\",function(){",
+									"    pm.expect(typeof JSON.parse(responseBody).booking.totalprice).to.be.equal(\"number\")",
+									"})",
+									"",
+									"",
+									"",
+									"// Check depositpaid property",
+									"",
+									"// Check depositpaid is Exisits in Response Body",
+									"pm.test('[2.Booking].[2.2createBooking].[18]Check depositpaid is Exisits in Response Body', function () {",
+									"    pm.expect(JSON.parse(responseBody).booking).to.have.property('depositpaid');",
+									"})",
+									"",
+									"// Check depositpaid as expected",
+									"pm.test('[2.Booking].[2.2createBooking].[19]Check depositpaid is : '+JSON.parse(request.data).depositpaid, function () {",
+									"    pm.expect(JSON.parse(request.data).depositpaid).to.be.equal(JSON.parse(responseBody).booking.depositpaid);",
+									"})",
+									"// Check depositpaid not null or undefinede",
+									"pm.test(\"[2.Booking].[2.2createBooking].[20]Check depositpaid not null or undefined\",function(){",
+									"  pm.expect(JSON.parse(responseBody).booking.depositpaid).to.not.be.equal(undefined);",
+									"  pm.expect(JSON.parse(responseBody).booking.depositpaid).to.not.be.equal(null);",
+									"});",
+									"",
+									"// Check depositpaid is bolean",
+									"pm.test(\"[2.Booking].[2.2createBooking].[21]Check depositpaid is bolean\",function(){",
+									"    pm.expect(typeof JSON.parse(responseBody).booking.depositpaid).to.be.equal(\"boolean\")",
+									"})",
+									"",
+									"",
+									"////Check Checkin property ",
+									"",
+									"// Check checkin is Exisits in Response Body",
+									"pm.test('[2.Booking].[2.2createBooking].[22]Check checkin is Exisits in Response Body', function () {",
+									"    pm.expect(JSON.parse(responseBody).booking.bookingdates).to.have.property('checkin');",
+									"})",
+									"",
+									"// Check checkin as expected",
+									"pm.test('[2.Booking].[2.2createBooking].[23]Check checkin is : '+JSON.parse(request.data).bookingdates.checkin, function () {",
+									"    pm.expect(JSON.parse(request.data).bookingdates.checkin).to.be.equal(JSON.parse(responseBody).booking.bookingdates.checkin);",
+									"})",
+									"// Check checkin not null or undefinede",
+									"pm.test(\"[2.Booking].[2.2createBooking].[24]Check checkin not null or undefined\",function(){",
+									"  pm.expect(JSON.parse(responseBody).booking.bookingdates.checkin).to.not.be.equal(undefined);",
+									"  pm.expect(JSON.parse(responseBody).booking.bookingdates.checkin).to.not.be.equal(null);",
+									"});",
+									"",
+									"// Check checkin is string",
+									"pm.test(\"[2.Booking].[2.2createBooking].[25]Check checkin is string\",function(){",
+									"    pm.expect(typeof JSON.parse(responseBody).booking.bookingdates.checkin).to.be.equal(\"string\")",
+									"})",
+									"",
+									"",
+									"////Check checkout property ",
+									"",
+									"// Check checkout is Exisits in Response Body",
+									"pm.test('[2.Booking].[2.2createBooking].[26]Check checkout is Exisits in Response Body', function () {",
+									"    pm.expect(JSON.parse(responseBody).booking.bookingdates).to.have.property('checkout');",
+									"})",
+									"",
+									"// Check checkout as expected",
+									"pm.test('[2.Booking].[2.2createBooking].[27]Check checkout is : '+JSON.parse(request.data).bookingdates.checkout, function () {",
+									"    pm.expect(JSON.parse(request.data).bookingdates.checkout).to.be.equal(JSON.parse(responseBody).booking.bookingdates.checkout);",
+									"})",
+									"// Check checkout not null or undefinede",
+									"pm.test(\"[2.Booking].[2.2createBooking].[28]Check checkout not null or undefined\",function(){",
+									"  pm.expect(JSON.parse(responseBody).booking.bookingdates.checkout).to.not.be.equal(undefined);",
+									"  pm.expect(JSON.parse(responseBody).booking.bookingdates.checkout).to.not.be.equal(null);",
+									"});",
+									"",
+									"// Check checkout is string",
+									"pm.test(\"[2.Booking].[2.2createBooking].[29]Check checkout is string\",function(){",
+									"    pm.expect(typeof JSON.parse(responseBody).booking.bookingdates.checkout).to.be.equal(\"string\")",
+									"})",
+									"",
+									"",
+									"",
+									"",
+									"//// Check additionalneeds property",
+									"",
+									"// Check additionalneeds is exist in response Body",
+									"pm.test('[2.Booking].[2.2createBooking].[30]Check additionalneeds is Exisits in Response Body', function () {",
+									"    pm.expect(JSON.parse(responseBody).booking).to.have.property('additionalneeds');",
+									"})",
+									"",
+									"// Check additionalneeds as expected",
+									"pm.test('[2.Booking].[2.2createBooking].[31]Check additionalneeds is : '+JSON.parse(request.data).additionalneeds, function () {",
+									"    pm.expect(JSON.parse(request.data).additionalneeds).to.be.equal(JSON.parse(responseBody).booking.additionalneeds);",
+									"})",
+									"// Check additionalneeds not null or undefinede",
+									"pm.test(\"[2.Booking].[2.2createBooking].[32]Check additionalneeds not null or undefined\",function(){",
+									"  pm.expect(JSON.parse(responseBody).booking.additionalneeds).to.not.be.equal(undefined);",
+									"  pm.expect(JSON.parse(responseBody).booking.additionalneeds).to.not.be.equal(null);",
+									"});",
+									"",
+									"// Check additionalneeds is String",
+									"pm.test(\"[2.Booking].[2.2createBooking].[32]Check additionalneeds is String\",function(){",
+									"    pm.expect(typeof JSON.parse(responseBody).booking.additionalneeds).to.be.equal(\"string\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"//Generate random price between 100/150\r",
+									"function generateRandomBetween100And150() {\r",
+									" const min = 100;\r",
+									" const max = 150;\r",
+									"\r",
+									" // Use Math.random() to generate a random decimal between 0 and 1\r",
+									" const randomDecimal = Math.random();\r",
+									"\r",
+									" // Multiply the decimal by the difference between max and min\r",
+									" // and add the result to min to get a random number within the range\r",
+									" const randomValue = min + (randomDecimal * (max - min));\r",
+									"\r",
+									" // Ensure the value is within the range and return it as an integer\r",
+									" return Math.min(150, Math.max(100, Math.round(randomValue))) || 150;\r",
+									"}\r",
+									"const randomValue = generateRandomBetween100And150();\r",
+									"pm.collectionVariables.set(\"price\",randomValue);\r",
+									"console.log(randomValue);\r",
+									"\r",
+									"//Generate random checkin and checkout date \r",
+									"function generateRandomStartDateEndDateIn1999() {\r",
+									"  const minDate = new Date(1999, 0, 1); // January 1, 1999\r",
+									"  const maxDate = new Date(1999, 11, 31); // December 31, 1999\r",
+									"\r",
+									"  let checkinDate, checkoutDate;\r",
+									"\r",
+									"  do {\r",
+									"    // Generate random milliseconds for the start date within the year 1999\r",
+									"    checkinDate = new Date(minDate.getTime() + Math.random() * (maxDate.getTime() - minDate.getTime()));\r",
+									"\r",
+									"    // Generate random milliseconds for the end date within the range of start date to max date\r",
+									"    checkoutDate = new Date(\r",
+									"      checkinDate.getTime() + Math.random() * (maxDate.getTime() - checkinDate.getTime())\r",
+									"    );\r",
+									"  } while (checkoutDate < checkinDate); // Ensure end date is not less than start date\r",
+									"  // Format dates as desired (e.g., MM/DD/YYYY)\r",
+									"  const formattedCheckinDate = checkinDate.toISOString().slice(0, 10);\r",
+									"  const formattedCheckoutDate = checkoutDate.toISOString().slice(0, 10);\r",
+									"\r",
+									"  return { checkinDate: formattedCheckinDate, checkoutDate: formattedCheckoutDate };\r",
+									"}\r",
+									"\r",
+									"const randomDates = generateRandomStartDateEndDateIn1999();\r",
+									"pm.collectionVariables.set(\"CheckinDate\",randomDates.checkinDate);\r",
+									"pm.collectionVariables.set(\"CheckoutDate\",randomDates.checkoutDate);\r",
+									"console.log(\"CheckinDate:\", randomDates.checkinDate);\r",
+									"console.log(\"CheckoutDate:\", randomDates.checkoutDate);\r",
+									"\r",
+									"function generateRandomMeal() {\r",
+									"  const meals = [\"Breakfast\", \"Lunch\", \"Dinner\"];\r",
+									"\r",
+									"  // Use Math.random() to pick a random index within the meals array\r",
+									"  const randomIndex = Math.floor(Math.random() * meals.length);\r",
+									"\r",
+									"  // Return the meal at the randomly selected index\r",
+									"  return meals[randomIndex];\r",
+									"}\r",
+									"const randomMeal = generateRandomMeal();\r",
+									"pm.collectionVariables.set(\"additionalneeds\",randomMeal);\r",
+									"console.log(randomMeal);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"{{$randomFirstName}}\",\r\n    \"lastname\" : \"{{$randomLastName}}\",\r\n    \"totalprice\" : {{price}},\r\n    \"depositpaid\" : {{$randomBoolean}},\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"{{CheckinDate}}\",\r\n        \"checkout\" : \"{{CheckoutDate}}\"\r\n    },\r\n    \"additionalneeds\" : \"{{additionalneeds}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/booking/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"booking",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.2GetBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"[2.Booking].[2.3updateBooking].[1]Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//// Check First name property\r",
+									"\r",
+									"// Check First name is exist in response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[2]Check firstname is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('firstname');\r",
+									"})\r",
+									"\r",
+									"// Check First name not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[4]Check First name not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).firstname).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).firstname).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check First name is String\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[5]Check first name is String\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).firstname).to.be.equal(\"string\")\r",
+									"})\r",
+									"\r",
+									"//// Check lastname property\r",
+									"\r",
+									"// Check lastname is exist in response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[6]Check lastname is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('lastname');\r",
+									"})\r",
+									"\r",
+									"// Check lastname not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[8]Check lastname not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).lastname).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).lastname).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check lastname is String\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[9]Check first name is String\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).lastname).to.be.equal(\"string\")\r",
+									"})\r",
+									"\r",
+									"//// check totalprice property\r",
+									"\r",
+									"// Check total price is exists in response body \r",
+									"pm.test('[2.Booking].[2.3updateBooking].[10]Check totalprice is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('totalprice');\r",
+									"})\r",
+									"\r",
+									"// Check totalprice not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[12]Check totalprice not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).totalprice).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).totalprice).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check totalprice is number\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[13]Check totalprice is number\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).totalprice).to.be.equal(\"number\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"// Check depositpaid property\r",
+									"\r",
+									"// Check depositpaid is Exisits in Response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[14]Check depositpaid is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('depositpaid');\r",
+									"})\r",
+									"\r",
+									"// Check depositpaid not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[16]Check depositpaid not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).depositpaid).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).depositpaid).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check depositpaid is bolean\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[17]Check depositpaid is bolean\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).depositpaid).to.be.equal(\"boolean\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"////Check Checkin property \r",
+									"\r",
+									"// Check checkin is Exisits in Response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[18]Check checkin is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody).bookingdates).to.have.property('checkin');\r",
+									"})\r",
+									"\r",
+									"\r",
+									"// Check checkin not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[20]Check checkin not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).bookingdates.checkin).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).bookingdates.checkin).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check checkin is string\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[21]Check checkin is string\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).bookingdates.checkin).to.be.equal(\"string\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"////Check checkout property \r",
+									"\r",
+									"// Check checkout is Exisits in Response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[22]Check checkout is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody).bookingdates).to.have.property('checkout');\r",
+									"})\r",
+									"\r",
+									"\r",
+									"// Check checkout not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[24]Check checkout not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).bookingdates.checkout).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).bookingdates.checkout).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check checkout is string\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[25]Check checkout is string\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).bookingdates.checkout).to.be.equal(\"string\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"//// Check additionalneeds property\r",
+									"\r",
+									"// Check additionalneeds is exist in response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[26]Check additionalneeds is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('additionalneeds');\r",
+									"})\r",
+									"\r",
+									"// Check additionalneeds not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[28]Check additionalneeds not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).additionalneeds).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).additionalneeds).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check additionalneeds is String\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[29]Check additionalneeds is String\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).additionalneeds).to.be.equal(\"string\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/booking/{{bookingid}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"booking",
+								"{{bookingid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.3updateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"[2.Booking].[2.3updateBooking].[1]Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"send request to get booking id \",function()\r",
+									"{\r",
+									"    pm.sendRequest(\r",
+									"    { url: \"https://restful-booker.herokuapp.com/booking/\"+pm.collectionVariables.get(\"bookingid\"),\r",
+									"    method: \"GET\"\r",
+									"    });\r",
+									"     console.log(pm.collectionVariables.get(\"bookingid\"));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//// Check First name property\r",
+									"\r",
+									"// Check First name is exist in response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[2]Check firstname is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('firstname');\r",
+									"})\r",
+									"\r",
+									"// Check First name as expected\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[3]Check firstname is : '+JSON.parse(request.data).firstname, function () {\r",
+									"    pm.expect(JSON.parse(request.data).firstname).to.be.equal(JSON.parse(responseBody).firstname);\r",
+									"})\r",
+									"// Check First name not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[4]Check First name not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).firstname).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).firstname).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check First name is String\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[5]Check first name is String\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).firstname).to.be.equal(\"string\")\r",
+									"})\r",
+									"\r",
+									"//// Check lastname property\r",
+									"\r",
+									"// Check lastname is exist in response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[6]Check lastname is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('lastname');\r",
+									"})\r",
+									"\r",
+									"// Check lastname as expected\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[7]Check lastname is : '+JSON.parse(request.data).lastname, function () {\r",
+									"    pm.expect(JSON.parse(request.data).lastname).to.be.equal(JSON.parse(responseBody).lastname);\r",
+									"})\r",
+									"// Check lastname not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[8]Check lastname not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).lastname).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).lastname).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check lastname is String\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[9]Check first name is String\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).lastname).to.be.equal(\"string\")\r",
+									"})\r",
+									"\r",
+									"//// check totalprice property\r",
+									"\r",
+									"// Check total price is exists in response body \r",
+									"pm.test('[2.Booking].[2.3updateBooking].[10]Check totalprice is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('totalprice');\r",
+									"})\r",
+									"\r",
+									"// Check totalprice as expected\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[11]Check totalprice is : '+JSON.parse(request.data).totalprice, function () {\r",
+									"    pm.expect(JSON.parse(request.data).totalprice).to.be.equal(JSON.parse(responseBody).totalprice);\r",
+									"})\r",
+									"// Check totalprice not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[12]Check totalprice not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).totalprice).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).totalprice).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check totalprice is number\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[13]Check totalprice is number\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).totalprice).to.be.equal(\"number\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"// Check depositpaid property\r",
+									"\r",
+									"// Check depositpaid is Exisits in Response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[14]Check depositpaid is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('depositpaid');\r",
+									"})\r",
+									"\r",
+									"// Check depositpaid as expected\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[15]Check depositpaid is : '+JSON.parse(request.data).depositpaid, function () {\r",
+									"    pm.expect(JSON.parse(request.data).depositpaid).to.be.equal(JSON.parse(responseBody).depositpaid);\r",
+									"})\r",
+									"// Check depositpaid not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[16]Check depositpaid not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).depositpaid).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).depositpaid).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check depositpaid is bolean\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[17]Check depositpaid is bolean\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).depositpaid).to.be.equal(\"boolean\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"////Check Checkin property \r",
+									"\r",
+									"// Check checkin is Exisits in Response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[18]Check checkin is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody).bookingdates).to.have.property('checkin');\r",
+									"})\r",
+									"\r",
+									"// Check checkin as expected\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[19]Check checkin is : '+JSON.parse(request.data).bookingdates.checkin, function () {\r",
+									"    pm.expect(JSON.parse(request.data).bookingdates.checkin).to.be.equal(JSON.parse(responseBody).bookingdates.checkin);\r",
+									"})\r",
+									"// Check checkin not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[20]Check checkin not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).bookingdates.checkin).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).bookingdates.checkin).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check checkin is string\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[21]Check checkin is string\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).bookingdates.checkin).to.be.equal(\"string\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"////Check checkout property \r",
+									"\r",
+									"// Check checkout is Exisits in Response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[22]Check checkout is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody).bookingdates).to.have.property('checkout');\r",
+									"})\r",
+									"\r",
+									"// Check checkout as expected\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[23]Check checkout is : '+JSON.parse(request.data).bookingdates.checkout, function () {\r",
+									"    pm.expect(JSON.parse(request.data).bookingdates.checkout).to.be.equal(JSON.parse(responseBody).bookingdates.checkout);\r",
+									"})\r",
+									"// Check checkout not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[24]Check checkout not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).bookingdates.checkout).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).bookingdates.checkout).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check checkout is string\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[25]Check checkout is string\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).bookingdates.checkout).to.be.equal(\"string\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"//// Check additionalneeds property\r",
+									"\r",
+									"// Check additionalneeds is exist in response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[26]Check additionalneeds is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('additionalneeds');\r",
+									"})\r",
+									"\r",
+									"// Check additionalneeds as expected\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[27]Check additionalneeds is : '+JSON.parse(request.data).additionalneeds, function () {\r",
+									"    pm.expect(JSON.parse(request.data).additionalneeds).to.be.equal(JSON.parse(responseBody).additionalneeds);\r",
+									"})\r",
+									"// Check additionalneeds not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[28]Check additionalneeds not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).additionalneeds).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).additionalneeds).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check additionalneeds is String\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[29]Check additionalneeds is String\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).additionalneeds).to.be.equal(\"string\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"//Generate random price between 100/150\r",
+									"function generateRandomBetween100And150() {\r",
+									" const min = 100;\r",
+									" const max = 150;\r",
+									"\r",
+									" // Use Math.random() to generate a random decimal between 0 and 1\r",
+									" const randomDecimal = Math.random();\r",
+									"\r",
+									" // Multiply the decimal by the difference between max and min\r",
+									" // and add the result to min to get a random number within the range\r",
+									" const randomValue = min + (randomDecimal * (max - min));\r",
+									"\r",
+									" // Ensure the value is within the range and return it as an integer\r",
+									" return Math.min(150, Math.max(100, Math.round(randomValue))) || 150;\r",
+									"}\r",
+									"const randomValue = generateRandomBetween100And150();\r",
+									"pm.collectionVariables.set(\"price\",randomValue);\r",
+									"console.log(randomValue);\r",
+									"\r",
+									"//Generate random checkin and checkout date \r",
+									"function generateRandomStartDateEndDateIn1999() {\r",
+									"  const minDate = new Date(1999, 0, 1); // January 1, 1999\r",
+									"  const maxDate = new Date(1999, 11, 31); // December 31, 1999\r",
+									"\r",
+									"  let checkinDate, checkoutDate;\r",
+									"\r",
+									"  do {\r",
+									"    // Generate random milliseconds for the start date within the year 1999\r",
+									"    checkinDate = new Date(minDate.getTime() + Math.random() * (maxDate.getTime() - minDate.getTime()));\r",
+									"\r",
+									"    // Generate random milliseconds for the end date within the range of start date to max date\r",
+									"    checkoutDate = new Date(\r",
+									"      checkinDate.getTime() + Math.random() * (maxDate.getTime() - checkinDate.getTime())\r",
+									"    );\r",
+									"  } while (checkoutDate < checkinDate); // Ensure end date is not less than start date\r",
+									"  // Format dates as desired (e.g., MM/DD/YYYY)\r",
+									"  const formattedCheckinDate = checkinDate.toISOString().slice(0, 10);\r",
+									"  const formattedCheckoutDate = checkoutDate.toISOString().slice(0, 10);\r",
+									"\r",
+									"  return { checkinDate: formattedCheckinDate, checkoutDate: formattedCheckoutDate };\r",
+									"}\r",
+									"\r",
+									"const randomDates = generateRandomStartDateEndDateIn1999();\r",
+									"pm.collectionVariables.set(\"CheckinDate\",randomDates.checkinDate);\r",
+									"pm.collectionVariables.set(\"CheckoutDate\",randomDates.checkoutDate);\r",
+									"console.log(\"CheckinDate:\", randomDates.checkinDate);\r",
+									"console.log(\"CheckoutDate:\", randomDates.checkoutDate);\r",
+									"\r",
+									"function generateRandomMeal() {\r",
+									"  const meals = [\"Breakfast\", \"Lunch\", \"Dinner\"];\r",
+									"\r",
+									"  // Use Math.random() to pick a random index within the meals array\r",
+									"  const randomIndex = Math.floor(Math.random() * meals.length);\r",
+									"\r",
+									"  // Return the meal at the randomly selected index\r",
+									"  return meals[randomIndex];\r",
+									"}\r",
+									"const randomMeal = generateRandomMeal();\r",
+									"pm.collectionVariables.set(\"additionalneeds\",randomMeal);\r",
+									"console.log(randomMeal);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "token=abc123",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"{{$randomFirstName}}\",\r\n    \"lastname\" : \"{{$randomLastName}}\",\r\n    \"totalprice\" : {{price}},\r\n    \"depositpaid\" : {{$randomBoolean}},\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"{{CheckinDate}}\",\r\n        \"checkout\" : \"{{CheckoutDate}}\"\r\n    },\r\n    \"additionalneeds\" : \"{{additionalneeds}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/booking/{{bookingid}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"booking",
+								"{{bookingid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.4partialUpdateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"send request to get booking id \",function()\r",
+									"{\r",
+									"    pm.sendRequest(\r",
+									"    { url: \"https://restful-booker.herokuapp.com/booking/\"+pm.collectionVariables.get(\"bookingid\"),\r",
+									"    method: \"GET\"\r",
+									"    });\r",
+									"     console.log(pm.collectionVariables.get(\"bookingid\"));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//// Check First name property\r",
+									"\r",
+									"// Check First name is exist in response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[2]Check firstname is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('firstname');\r",
+									"})\r",
+									"\r",
+									"// Check First name as expected\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[3]Check firstname is : '+JSON.parse(request.data).firstname, function () {\r",
+									"    pm.expect(JSON.parse(request.data).firstname).to.be.equal(JSON.parse(responseBody).firstname);\r",
+									"})\r",
+									"// Check First name not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[4]Check First name not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).firstname).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).firstname).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check First name is String\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[5]Check first name is String\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).firstname).to.be.equal(\"string\")\r",
+									"})\r",
+									"\r",
+									"//// Check lastname property\r",
+									"\r",
+									"// Check lastname is exist in response Body\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[6]Check lastname is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)).to.have.property('lastname');\r",
+									"})\r",
+									"\r",
+									"// Check lastname as expected\r",
+									"pm.test('[2.Booking].[2.3updateBooking].[7]Check lastname is : '+JSON.parse(request.data).lastname, function () {\r",
+									"    pm.expect(JSON.parse(request.data).lastname).to.be.equal(JSON.parse(responseBody).lastname);\r",
+									"})\r",
+									"// Check lastname not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[8]Check lastname not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody).lastname).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody).lastname).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check lastname is String\r",
+									"pm.test(\"[2.Booking].[2.3updateBooking].[9]Check first name is String\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody).lastname).to.be.equal(\"string\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"James\",\r\n    \"lastname\" : \"Brown\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/booking/{{bookingid}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"booking",
+								"{{bookingid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.5DeleteBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"send request to get booking id \",function()\r",
+									"{\r",
+									"    pm.sendRequest(\r",
+									"    { url: \"https://restful-booker.herokuapp.com/booking/\"+pm.collectionVariables.get(\"bookingid\"),\r",
+									"    method: \"GET\"\r",
+									"    \r",
+									"    });\r",
+									"     console.log(pm.collectionVariables.get(\"bookingid\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json' \\",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/booking/{{bookingid}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"booking",
+								"{{bookingid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.6GetBookingIDS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"// Check bookingid is exist in response Body\r",
+									"pm.test('[2.Booking].[2.2createBooking].[30]Check bookingid is Exisits in Response Body', function () {\r",
+									"    pm.expect(JSON.parse(responseBody)[0]).to.have.property('bookingid');\r",
+									"})\r",
+									"\r",
+									"// Check bookingid List not null or undefinede\r",
+									"pm.test(\"[2.Booking].[2.2createBooking].[32]Check token not null or undefined\",function(){\r",
+									"  pm.expect(JSON.parse(responseBody)).to.not.be.equal(undefined);\r",
+									"  pm.expect(JSON.parse(responseBody)).to.not.be.equal(null);\r",
+									"});\r",
+									"\r",
+									"// Check bookingid Response list is object\r",
+									"pm.test(\"[2.Booking].[2.2createBooking].[32]Check bookingid Response list is object\",function(){\r",
+									"    pm.expect(typeof JSON.parse(responseBody)).to.be.equal(\"object\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/booking",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3.Ping",
+			"item": [
+				{
+					"name": "3.1HealthCheck",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ping",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "price",
+			"value": ""
+		},
+		{
+			"key": "CheckinDate",
+			"value": ""
+		},
+		{
+			"key": "CheckoutDate",
+			"value": ""
+		},
+		{
+			"key": "additionalneeds",
+			"value": ""
+		},
+		{
+			"key": "Token",
+			"value": ""
+		},
+		{
+			"key": "bookingid",
+			"value": ""
+		}
+	]
+}
